@@ -6,6 +6,7 @@
 /*********************
 * Setup interest form
 *********************/
+jQuery(document).ready(function(){
 dom = document;
 
 var input1 = dom.createElement("input"),
@@ -105,7 +106,7 @@ theForm.appendChild(submit);
 formDiv.appendChild(theForm);
 formDiv.id = "plotform";
 
-dom.getElementById("content")
+dom.getElementById("ak-blog-post")
 	.insertBefore(formDiv, dom.getElementById("primary"));
 
 
@@ -113,21 +114,38 @@ dom.getElementById("content")
 * Style the interest form
 ***************************************************/
 
-d3.select("#plotform").style({"margin-bottom": "30px","max-width":"800px"});
-d3.selectAll("#plotform input").style({"margin": "0 10px 10px","border":"2px solid green"});
-d3.selectAll(".calcform_inner").style({"float":"left","width":"45%","margin-left":"2%","min-width":"360px","max-width":"500px","text-align":"right"});
-d3.select(submit).style({"width":"100%","max-width":"800px"});
-d3.select(clearfix).style({"clear":"both"});
+d3.select("#plotform")
+	.style({"margin-bottom": "30px","max-width":"800px"});
+d3.selectAll("#plotform input")
+	.style({"margin": "0 10px 10px","border":"2px solid green"});
+d3.selectAll(".calcform_inner")
+	.style({"float":"left","width":"45%","margin-left":"2%","min-width":"360px","max-width":"500px","text-align":"right"});
+d3.select(submit)
+	.style({"width":"100%","max-width":"800px"});
+d3.select(clearfix)
+	.style({"clear":"both"});
 
 
 /**************************************************
 * Setup the Figure
 ***************************************************/
+if (window.innerWidth > 820) {
+	var vis = d3.select("#figure_container"),
+		width = 800,
+		height = 300,
+		margins = {top: 60, right: 20, bottom: 20, left: 100};
+} else if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+	var vis = d3.select("#figure_container"),
+		width = window.innerWidth - 20,
+		height = width * 6/8,
+		margins = {top: 60, right: 0, bottom: 10, left: 50};
+} else {
+	var vis = d3.select("#figure_container"),
+		width = window.innerWidth - 20,
+		height = width * 6/8,
+		margins = {top: 60, right: 0, bottom: 20, left: 70};
+}
 
-var vis = d3.select("#figure_container"),
-	width = 800,
-	height = 300,
-	margins = {top: 60, right: 20, bottom: 20, left: 100};
 
 vis.attr("width",width).attr("height",height);
 
@@ -234,6 +252,7 @@ vis.append('svg:g')
 //// Place labels on the axes
 // Y-axis
 vis.append("text")
+	.attr("id", "y-title")
 	.attr("transform","rotate(270)")
 	.attr("x", (-height/2))
 	.attr("y", (margins.left/3))
@@ -242,6 +261,7 @@ vis.append("text")
 
 // X-axis
 vis.append("text")
+	.attr("id", "x-title")
 	.attr("x", (width/2 + margins.right))
 	.attr("y", (height - (margins.top)/3))
 	.attr("text-anchor", "middle")
@@ -290,6 +310,8 @@ jQuery("button#submit").on('click', function(e) {
 		time_in = numberCheck(jQuery("#time_input").val()),
 		contr_in = numberCheck(jQuery("#monthly_input").val());
 
+	
+	
 	// if any input is wrong, throw up error box. Otherwise, go on and redraw.
 	if (money_in !== false && rate_in !== false && time_in !== false && contr_in !== false) {
 
@@ -385,7 +407,7 @@ d3.select(infobox)
 
 infobox.innerHTML = "";
 
-dom.getElementById("content")
+dom.getElementById("ak-blog-post")
 	.insertBefore(infobox, dom.getElementById("plotform"));
 
 var months2years = function(nmonths){
@@ -435,4 +457,5 @@ vis.on("mouseout", function(){
 	emptycirc.attr("opacity", "0");
 });
 
+});
 
